@@ -1,0 +1,180 @@
+<!doctype html>
+<html>
+	<head>
+	<meta charset="UTF-8" >
+	<style>
+		@font-face {
+            font-family: 'Minecraft';
+            src: url('./Minecraft.ttf') format('truetype');
+        }
+		
+		@font-face {
+            font-family: 'starborn';
+            src: url('./Starborn.otf') format('opentype');
+        }
+	 
+	 
+	 
+	 header {height:100vh; display:grid;place-content:center;}
+	 .cell {background-color:#1F3640; box-shadow:0vh 0.8vh #10202A; width:15vh; height:15vh; border-radius:1.5vh; text-align:center; font-size:7vh; font-family:starborn; color:#32C3BE;}
+	 .cell:hover {box-shadow:0vh 0vh;}
+	 table {border-spacing:2vh;}
+	 body {background-color:#1A2A32;}
+	 #mes { color:green; text-align:center; font-size:5vh; font-family:Minecraft; letter-spacing:0.7vh;}
+	 #cont1 { height:4vh;}
+	 #x {font-family:starborn; color:#32C3BE; font-size:4vh;}
+	 #o {font-family:starborn; color:#F8B437;font-size:4vh;}
+	 #turn {color:#A8BEC8; box-shadow:0vh 0.6vh #10202A; background-color:#1F3640; height:4vh; border-radius:1vh; text-align:center;  font-size:2.4vh; font-family:Arial black; width:15vh; padding-top:0.3vh; letter-spacing:0.1vh;}
+	 img { width:5vh; background-color:#A8BEC8; border-radius:0.9vh; margin-left:auto; box-shadow:0vh 0.4vh #718C97;}
+	 img:hover {box-shadow: 0vh 0vh;}
+	 #ig {place-content:center; display:flex; width:14vh;} 
+	 #x-s {background-color:#32C3BE; width:15vh; font-size:1.7vh; height:8vh; border-radius:1.5vh; text-align:center; font-family:Arial Black;}
+	 #d-s {background-color:#A8BEC8; width:15vh; font-size:1.7vh; height:8vh; border-radius:1.5vh; text-align:center; font-family:Arial Black;}
+	 #o-s {background-color:#F8B437; width:15vh; font-size:1.7vh; height:8vh; border-radius:1.5vh; text-align:center; font-family:Arial Black;}
+	</style>
+	
+	
+	</head>
+
+	<body>
+			
+			<header>
+				<table>
+					<tr> <td>  <div id=cont1><span id=x >X</span> <span id=o>O</span></div>   </td> <td> <div id=turn >TURN</div> </td> <td id=ig> <img id=imag src="./reload.png"> </td> </tr>
+					<tr> <td index="0" class=cell ></td> <td index="1" class=cell></td> <td index="2" class=cell></td> </tr>
+					<tr> <td index="3" class=cell></td> <td index="4" class=cell></td> <td index="5" class=cell></td> </tr>
+					<tr> <td index="6" class=cell></td> <td index="7" class=cell></td> <td index="8" class=cell></td> </tr>
+					<tr> <td id=x-s> X : 0</td> <td id=d-s>D : 0</td> <td id=o-s>O : 0</td> </tr>
+					<tr><td colspan="3"> <div id="mes"></div> </td></tr>
+				</table></br>
+				
+			</header>
+	
+	
+	<script>
+		var x_score=0;
+		var o_score=0;
+		var d_score=0;
+		var mess=document.getElementById("mes");
+		var trn=document.getElementById("turn");
+		var currplayer;
+		var mvs;
+		var t=[];
+		var colr;
+		var cells=document.querySelectorAll(".cell");
+		var bol;
+		
+		init();
+		
+		document.getElementById("imag").addEventListener("click",init);
+		
+		
+		function init(){
+		
+			
+			currplayer='X';
+			trn.innerText=currplayer+" TURN";
+			colr="#32C3BE";
+			t=['0','1','2','3','4','5','6','7','8'];
+			mvs=0;
+			bol=true;
+			mess.innerText="";
+	
+
+
+			cells.forEach(cell => cell.innerText="");
+			cells.forEach(cell => cell.addEventListener("click", function() {
+					
+					if(bol==false){
+						return;
+					}
+					
+					
+					
+					var ind = this.getAttribute("index");
+					
+					if(t[ind]!='X' && t[ind]!='O'){
+						t[ind]=currplayer
+						this.innerText=currplayer;
+						this.style.color=colr;
+						mvs++;
+						win();
+						swtch();
+						document.getElementById("x-s").innerText="X "+": "+x_score;
+						document.getElementById("o-s").innerText="O "+": "+o_score;
+						document.getElementById("d-s").innerText="D "+": "+d_score;
+						
+					}
+					
+			
+			}));
+		}	
+		
+			
+			function win(){
+				var i;
+				let win_cond=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+				
+				if(mvs < 9){
+					for(i=0;i<=7;i++){
+						A=win_cond[i][0];
+						B=win_cond[i][1];
+						C=win_cond[i][2];
+						
+						if(t[A]==t[B] && t[B]==t[C]){
+							if(currplayer=='X'){
+								mess.innerText="X win";
+								mess.style.color="#32C3BE";
+								x_score++;
+								bol=false;
+							}else{
+								mess.innerText="O win";
+								mess.style.color="#F8B437"
+								o_score++;
+								bol=false;
+							}
+							
+						
+						}
+					
+					}
+				
+				
+				}else{
+					mess.innerText="Draw";
+					d_score++;
+					mess.style.color="#A8BEC8"
+					bol=false
+				}
+			 
+			 
+			 
+			}
+			
+			
+			function swtch(){
+				
+			
+				if(currplayer=='X'){
+					currplayer='O';
+					colr="#F8B437";
+					trn.innerText="O TURN";
+				}else{
+					currplayer='X';
+					colr="#32C3BE";
+					trn.innerText="X TURN";
+				}
+			}
+		
+	
+	
+	
+	</script>
+	
+	
+	
+	
+	</body>
+
+
+</html>
